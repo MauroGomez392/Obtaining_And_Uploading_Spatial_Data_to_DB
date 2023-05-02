@@ -7,17 +7,18 @@ Each source has a priority associated with it in the database, which corresponds
 
 The file that must be run is main.py.
 
-Getting Started
+# Getting Started
 These instructions will help you set up and run the project on your local machine for development and testing purposes.
 
-Prerequisites
+# Prerequisites
 List of requirements needed to run the project:
 
 Python => recommended version = Python 3.11.1
 PIP
 PostgreSQL with "postgis" extension to store spatial data ==> recommended version of postgis = 3.3.1
 Download Posgis Extension for downloaded version of PostgreSQL
-Installation
+
+#Installation
 Steps to follow to install and set up the project:
 
 1-  Clone the repository
@@ -35,34 +36,27 @@ Steps to follow to install and set up the project:
 9-  Run main.py file with Python. This will execute the procces.
  
  
-Implementation:
+# Implementation:
 
 Currently, the script needs to be manually run (you can make the automation that runs every X time with bash).
 To run it, we need to enter our virtual environment (steps described above), navigate to the src/ folder, and run main.py.
 - If you have Python version 3 or later, run: python3 main.py
 - If you have an earlier version, run: python main.py
 
-Saved logs:
+# Saved logs:
 Every time the program is runned, a file with a .txt extension will be created that will store all error messages that occurred while the script was running.
 This file is automatically created and saved in the Logs folder, stored in the path defined in the .env file, the same path where all layers to be loaded via "Local" files are loaded. The file name is auto-generated with the log date and will save all logs generated on that date. That is, if the script was run twice in the same day, the file is not overwritten but will save both logs. Each saved message shows the time it was generated.
 
-Folder for Local layers:
+# Folder for Local layers:
 Layers that want to be loaded via "Local" must be loaded in the path defined in the .env file (SHP_LOCAL_FOLDER).
 It is IMPORTANT to note that any layer that is to be loaded must be in compressed .zip format and must contain either a shape file (.shp) or a geopackage (.gpkg), with the former being preferable. It should also be noted that whether the layer has been successfully loaded into the database or not, the file in that path will be deleted, making room for a new file, either to update the layer or to load another file without conflicts.
 
-Adding a new layer to the database:
+# Adding a new layer to the database:
 If you want to add a layer to the database, the layer must be created as a new instance of the CapaDescriptor class.
 This instance must be created in the seedfile.py file and the "load_one_CapaDescriptor()" function must be called, passing the instance of the class with the layer data as a parameter. Subsequently, that file must be run through the console (instructions above).
 
-Adding a new download source for an existing layer:
+# Adding a new download source for an existing layer:
 If you want to add one or more download sources for a layer in the database, the source must be loaded by creating a new instance of the CapaFuente class.
 This instance must be created in the seedfile.py file (same file for loading CapaDescriptor instances) and the "load_one_FuenteCapa()" function must be called, passing the instance of the class with the layer source data as a parameter. Subsequently, that file must be run through the console (instructions above).
-
-Future improvements:
-These are the ideas for improving in the next version:
-
-Functionality to delete shape files that were loaded using another priority?
-A function that, when running the seedfile, checks which CapaDescriptor and CapaFuente instances already exist and thus ignores them and only loads new instances from the seedfileJson.
-
 
 
