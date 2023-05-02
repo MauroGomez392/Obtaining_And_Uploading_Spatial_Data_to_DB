@@ -1,81 +1,68 @@
-# mcda-carga-datos
+# Obtaining and Uploading Spatial Data to DB
+This is a project that collects spatial data from different sources, standardizes it with a common reference system and stores it in a database, making it ready to be used in another geoprocess.
 
-Este es un proyecto que recolecta datos espaciales de diferentes fuentes, los estandariza con un sistema de referencia en común y los guara en una base de datos, dejándolos listos para ser utilizados en otro geoproceso.
+Obtaining_And_Uploading_Spatial_Data_to_DB consumes a database through an ORM (SQLAlchemy) where the data of all layers that need to be updated and the sources from which the latest versions of each layer can be consumed (Geoservice "WFS", "Download" links or uploading through "Local" files) are stored.
 
-mcda-carga-datos consume una base de datos mediante un ORM (SQLAlchemy) donde se guardan los datos de todas las capas (layers) que deben ser actualizadas y las fuentes de donde pueden consumirse las últimas versiones de cada capa (Geoservicio "WFS", links de "Descarga" o subida mediante archivos "Local"). 
+Each source has a priority associated with it in the database, which corresponds to the order in which the algorithm will try to update each layer respecting that order (WFS = 1 / Download = 2 / Local = 3). If the first one doesn't work, it will try to update with the second one and if not, with the third one.
 
-Cada fuente tiene asociada en la base de datos una prioridad que equivale al orden con la que correrá el algoritmo intentando actualizar cada capa respetando dicho orden (WFS = 1 / Descarga = 2 / Local = 3). En caso de que el primero no funcione, intentará actualizar con el segundo y sino con el tercero.
+The file that must be run is main.py.
 
-El archivo que se debe correr es el main.py
+Getting Started
+These instructions will help you set up and run the project on your local machine for development and testing purposes.
 
+Prerequisites
+List of requirements needed to run the project:
 
+Python => recommended version = Python 3.11.1
+PIP
+PostgreSQL with "postgis" extension to store spatial data ==> recommended version of postgis = 3.3.1
+Download Posgis Extension for downloaded version of PostgreSQL
+Installation
+Steps to follow to install and set up the project:
 
-Comenzando
-Estas instrucciones te ayudarán a configurar y correr el proyecto en tu máquina local para propósitos de desarrollo y pruebas.
-
-
-
-Prerrequisitos
-Listado de los requisitos necesarios para correr el proyecto.
-
-Listado:
-- Python => versión recomendada = Python 3.11.1
-- PIP
-- PostgreSQL con extensión "postgis" para almacenar datos espaciales ==> versión recomendada de postgis = 3.3.1 
-- Descargar Extensión Posgis para versión descargada de PostgreSQL
-
-
-
-Instalación
-Pasos a seguir para instalar y configurar el proyecto.
-
-Pasos:
-1. Clonar el repositorio
-2.  Unix:    Crear entorno virtual: virtualenv -p python3 “nombre_entorno” // “venv” por lo gral.
-    Windows: `python3 -m venv "nombre_entorno"`
-2.  Unix:    Correr `source ./venv/bin/activate` para iniciar el servidor del entorno virtual.
-            En caso de querer salir de su entorno virtual, corra el comando: "deactivate" en consola.
-    Windows: `nombre_entorno\Scripts\activate.bat` 
-3. Correr `pip install -r requirements.txt` en la raíz del proyecto.
-4. Llenar campos con credenciales para conexión en archivo .env .
-5. Cargar / llenar archivo "seedfileJson.py" con los datos de las Capas. Tomar como referencia las clases creadas en "capadescriptor.py" para el llenado de campos.
-6. Mediante CLI, situarse en carpeta src/ y correr el siguiente comando:
-    - en caso de tener versión de python 3 en adelante, correr:   python3 seedfile.py
-    - en caso de versiones anteriores, correr: python seedfile.py
-7. Chequear en consola mensajes. En caso de estar todo ok el proceso de instalación ha terminado. En caso opuesto revise los mensajes en consola, datos ingresados, credenciales y pasos seguidos.
-8. Correr archio main.py con python. Esto ejecutará el proceso. Podibilidad de que este punto se corra automáticamente.
-
+1-  Clone the repository
+2-  Unix: Create virtual environment: virtualenv -p python3 “env_name” // "venv" for general use. Windows: python3 -m venv "env_name"
+3-  Unix: Run source ./venv/bin/activate to start the virtual environment server. 
+    Windows: $ env_name\Scripts\activate.bat
+    To exit your virtual environment, run the command: "$deactivate" in the console. 
+4-  Run pip install -r requirements.txt in the project's root directory.
+5-  Fill in fields with connection credentials in the .env file.
+6-  Load/fill the seedfileJson.py file with the data of the layers. Use the classes created in capadescriptor.py as a reference for filling in the fields.
+7-  Through CLI, navigate to the src/ folder and run the following command:
+        *   If you have a version of Python 3 or later, run: python3 seedfile.py
+        *   If you have earlier versions, run: python seedfile.py
+8-  Check console messages. If everything is okay, the installation process is complete. Otherwise, review the messages in the console, entered data, credentials and       steps taken.
+9-  Run main.py file with Python. This will execute the procces.
  
-Implementación:
+ 
+Implementation:
 
-Actualmente el script se debe de correr manualmente (preveemos crear una automatización para que se corra 2 veces al año).
-Para correrlo, debemos entrar a nuestro entorno virtual (pasos descriptos arriba), situarnos en la carpeta src/ y correr el main.py
-    - en caso de tener versión de python 3 en adelante, correr:   python3 main.py
-    - en caso de versiones anteriores, correr: python main.py
+Currently, the script needs to be manually run (you can make the automation that runs every X time with bash).
+To run it, we need to enter our virtual environment (steps described above), navigate to the src/ folder, and run main.py.
+- If you have Python version 3 or later, run: python3 main.py
+- If you have an earlier version, run: python main.py
 
-Logs guardados:
-Cada vez que se corra el programa, se creará una archivo con extensión .txt que almacenará todos los mensajes de error que se hayan presentado mientras se corrió el script.
-Este archivo se crea automáticamente y se guarda en la carpeta Logs, guardada en la Ruta que se haya definido en el archivo .env, misma ruta donde se cargan todas las capas que se deseen cargar mediante archivos "Local". El nombre del archivo se autogenera con fecha del log y guardará todos los logs que se genere en esa fecha. Es decir, si el script se corrió dos veces en el mismo día, el archivo no se sobreescribe, sino que guardará ambos logs. Cada mensaje guarda se muestra con la hora en la que se generó.
+Saved logs:
+Every time the program is runned, a file with a .txt extension will be created that will store all error messages that occurred while the script was running.
+This file is automatically created and saved in the Logs folder, stored in the path defined in the .env file, the same path where all layers to be loaded via "Local" files are loaded. The file name is auto-generated with the log date and will save all logs generated on that date. That is, if the script was run twice in the same day, the file is not overwritten but will save both logs. Each saved message shows the time it was generated.
 
-Carpeta para capas Locales:
-Las capas que quieran ser cargadas mediante "Local" han de ser cargadas en la Ruta que se haya definido en el archivo .env (SHP_LOCAL_FOLDER). 
-Es IMPORTANTE tener en cuenta que toda capa que se quiera cargar debe hacerse en formato comprimido .zip y dentro deberá ser un shape file (.shp) o un geopackage (.gpkg) siendo preferible el primero. También hay que tener en cuenta que así sea que la capa se haya cargado en la base de datos correctamente o no, el archivo en dicha Ruta será borrado, dejándole lugar a un nuevo archivo, ya sea para actualizar la capa o para cargar otro archivo que no de errores y poder hacerlo sin conflictos.
+Folder for Local layers:
+Layers that want to be loaded via "Local" must be loaded in the path defined in the .env file (SHP_LOCAL_FOLDER).
+It is IMPORTANT to note that any layer that is to be loaded must be in compressed .zip format and must contain either a shape file (.shp) or a geopackage (.gpkg), with the former being preferable. It should also be noted that whether the layer has been successfully loaded into the database or not, the file in that path will be deleted, making room for a new file, either to update the layer or to load another file without conflicts.
 
+Adding a new layer to the database:
+If you want to add a layer to the database, the layer must be created as a new instance of the CapaDescriptor class.
+This instance must be created in the seedfile.py file and the "load_one_CapaDescriptor()" function must be called, passing the instance of the class with the layer data as a parameter. Subsequently, that file must be run through the console (instructions above).
 
-Agregar nueva capa a la base de datos:
-En el caso de querer sumar una capa a la base de datos, la capa se deberá crear como una nueva instancia de la clase CapaDescriptor. 
-Esta instancia se debe de crear en el archivo seedfile.py y se deberá llamar a la función "load_one_CapaDescriptor()" pasándole como parámetro la instancia de la clase con los datos de la capa. Posteriormente, se deberá de correr por consola ese archivo (indicaciones arriba).
+Adding a new download source for an existing layer:
+If you want to add one or more download sources for a layer in the database, the source must be loaded by creating a new instance of the CapaFuente class.
+This instance must be created in the seedfile.py file (same file for loading CapaDescriptor instances) and the "load_one_FuenteCapa()" function must be called, passing the instance of the class with the layer source data as a parameter. Subsequently, that file must be run through the console (instructions above).
 
+Future improvements:
+These are the ideas for improving in the next version:
 
-Agregar nueva fuente de descarga para capa ya existente:
-En el caso de querer sumar una o varias fuente/s de descarga una capa en la base de datos, la fuente se deberá cargar creando una nueva instancia de la clase CapaFuente. 
-Esta instancia se debe de crear en el archivo seedfile.py (mismo archivo de carga para instancias de CapaDescriptor) y se deberá llamar a la función "load_one_FuenteCapa()" pasándole como parámetro la instancia de la clase con los datos de la fuente de la capa. Posteriormente, se deberá de correr por consola ese archivo (indicaciones arriba).
-
-
-Futuras mejoras:
-Estas son las ideas para mejorar en la próxima versión:
-- Funcionalidad para eliminar archivos shape que se hayan cargado mediante otra prioridad?
-- Función que, a la hora de correr el seedfile, revise qué CapaDescriptor y CapaFuente ya existen y de esa forma ignorarlos y sólo cargar las nuevas instancias del seedfileJson.
+Functionality to delete shape files that were loaded using another priority?
+A function that, when running the seedfile, checks which CapaDescriptor and CapaFuente instances already exist and thus ignores them and only loads new instances from the seedfileJson.
 
 
 
